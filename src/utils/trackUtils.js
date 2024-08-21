@@ -1,23 +1,28 @@
-export const addTrack = (trackId, searchResults, setSearchResults, setSelectedTracks) => {
+export const addTrack = (trackId, searchResults, selectedTracks) => {
+
   const trackToAdd = searchResults.find((track) => track.id === trackId);
+
   if (trackToAdd) {
-    setSelectedTracks((prevTracks) => [...prevTracks, trackToAdd]);
-    setSearchResults((prevTracks) => prevTracks.filter((track) => track.id !== trackId));
-  }
+    const updatedSearchResults = searchResults.filter((track) => track.id !== trackId);
+    const updatedSelectedTracks = [...selectedTracks, trackToAdd];
+
+    return { updatedSearchResults, updatedSelectedTracks };
+  };
+
+  return { updatedSearchResults: searchResults, updatedSelectedTracks: selectedTracks };
 };
 
-export const removeTrack = (trackId, setSearchResults, selectedTracks, setSelectedTracks, dummyResults) => {
+export const removeTrack = (trackId, searchResults, selectedTracks, orderMap, reorderResults) => {
   const trackToRemove = selectedTracks.find((track) => track.id === trackId);
+
   if (trackToRemove) {
-    setSearchResults((prevTracks) => {
-      const updatedTracks = [...prevTracks, trackToRemove];
-      // Sort the updated tracks based on the original dummyResults order
-      return updatedTracks.sort((a, b) => {
-        const indexA = dummyResults.findIndex((track) => track.id === a.id);
-        const indexB = dummyResults.findIndex((track) => track.id === b.id);
-        return indexA - indexB;
-      });
-    });
-    setSelectedTracks((prevTracks) => prevTracks.filter((track) => track.id !== trackId));
+    const updatedSearchResults = [...searchResults, trackToRemove];
+    const updatedSelectedTracks = selectedTracks.filter((track) => track.id !== trackId);
+    
+    const updatedOrderSearchResults = reorderResults(updatedSearchResults, orderMap);
+
+    return { updatedSelectedTracks, updatedOrderSearchResults };
   }
+
+  return { updatedSelectedTracks: selectedTracks, updatedOrderSearchResults: searchResults };
 };
