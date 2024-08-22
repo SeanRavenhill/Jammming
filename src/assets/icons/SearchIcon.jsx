@@ -1,3 +1,5 @@
+
+
 export const SearchIcon = () => {
   return (
     <div className='w-10 h-10 flex justify-center items-center gap-[2px] rotate-45'>
