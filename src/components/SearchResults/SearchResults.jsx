@@ -16,6 +16,7 @@ export const SearchResults = ({ searchResults, addTrack }) => {
             album={track.album}       // Pass album name as a prop to the Track component
             artist={track.artist}     // Pass artist name as a prop to the Track component
             image={track.image}       // Pass album artwork image URL as a prop to the Track component
+            preview={track.preview}   // Pass track preview URL as prop to the Track component
             addTrack={addTrack}       // Pass addTrack function to handle adding the track to the playlist
           />
         ))}

@@ -50,6 +50,7 @@ export const Tracklist = ({ tracks, removeTrack, savePlaylist }) => {
             album={track.album}        // Pass album name as a prop to the Track component
             artist={track.artist}      // Pass artist name as a prop to the Track component
             image={track.image}        // Pass album artwork image URL as a prop to the Track component
+            preview={track.preview}   // Pass track preview URL as prop to the Track component
             removeTrack={removeTrack}  // Pass removeTrack function to handle removing the track
           />
         ))}

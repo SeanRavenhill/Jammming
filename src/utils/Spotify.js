@@ -65,12 +65,12 @@ export const Spotify = {
       artist: track.artists[0].name,
       album: track.album.name,
       image: track.album.images[0].url,
-      uri: track.uri
+      uri: track.uri,
+      preview: track.preview_url
     }));
 
     return responseObject // Return the array of track objects
   },
-
 
   // Method to get the current user's Spotify username
   getUserName: async (accessToken) => {
