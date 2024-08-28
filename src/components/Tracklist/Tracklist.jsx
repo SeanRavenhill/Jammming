@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Track } from '../Track/Track';
 import { Button } from '../Button/Button';
 
-export const Tracklist = ({ tracks, removeTrack, savePlaylist }) => {
+export const Tracklist = ({ tracks, removeTrack, currentPlayingTrackId, handlePlayPreview, savePlaylist }) => {
   // State to keep track of the playlist title input by the user
   const [playlistTitle, setplaylistTitle] = useState('');
   
@@ -44,14 +44,16 @@ export const Tracklist = ({ tracks, removeTrack, savePlaylist }) => {
       <div className='flex flex-col gap-4 flex-1 overflow-auto px-4'>
         {tracks.map(track => (
           <Track
-            key={track.id}             // Unique key for each Track component based on track ID
-            id={track.id}              // Pass track ID as a prop to the Track component
-            name={track.name}          // Pass track name as a prop to the Track component
-            album={track.album}        // Pass album name as a prop to the Track component
-            artist={track.artist}      // Pass artist name as a prop to the Track component
-            image={track.image}        // Pass album artwork image URL as a prop to the Track component
-            preview={track.preview}   // Pass track preview URL as prop to the Track component
-            removeTrack={removeTrack}  // Pass removeTrack function to handle removing the track
+            key={track.id}                                // Unique key for each Track component based on track ID
+            id={track.id}                                 // Pass track ID as a prop to the Track component
+            name={track.name}                             // Pass track name as a prop to the Track component
+            album={track.album}                           // Pass album name as a prop to the Track component
+            artist={track.artist}                         // Pass artist name as a prop to the Track component
+            image={track.image}                           // Pass album artwork image URL as a prop to the Track component
+            preview={track.preview}                       // Pass track preview URL as prop to the Track component
+            removeTrack={removeTrack}                     // Pass removeTrack function to handle removing the track
+            currentPlayingTrackId={currentPlayingTrackId} // ID of the currently playing track
+            handlePlayPreview={handlePlayPreview}         // Function to handle track preview playback
           />
         ))}
       </div>

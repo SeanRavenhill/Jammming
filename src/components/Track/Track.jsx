@@ -1,38 +1,41 @@
-import { useRef, useState, useEffect } from 'react';
 
-export const Track = ({ name, album, artist, image, id, preview, addTrack, removeTrack }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  
+
+// Import React Hooks
+import { useRef, useEffect } from 'react';
+
+export const Track = ({ name, album, artist, image, id, preview, addTrack, removeTrack, currentPlayingTrackId, handlePlayPreview }) => {
+
   // Create a ref to the audio element
   const audioRef = useRef(null);
+
+  // Determine if this track is currently playing
+  const isPlaying = currentPlayingTrackId === id
 
   // Handles the click event to either add or remove a track
   const handleAddRemoveTrack = () => {
     addTrack ? addTrack(id) : removeTrack(id); // If addTrack is provided, call it; otherwise, call removeTrack
   };
 
-  // Function to play the audio
-  const togglePlayPause = () => {
-    setIsPlaying(prevIsPlaying => !prevIsPlaying);
-  };
-
   useEffect(() => {
     const audioElement = audioRef.current;
-    
+
     if (isPlaying) {
-      audioElement.play();
+      audioElement.play().catch(error => {
+        console.error("Error playing audio", error);
+        handlePlayPreview(null);  // Stop playback if there's an error
+      });
     } else {
       audioElement.pause();
     }
-    
+
     return () => {
       audioElement.pause();  // Cleanup when the component unmounts or isPlaying changes
     };
-  }, [isPlaying]);
+  }, [isPlaying, handlePlayPreview]);
 
 
   return (
-    <div className='flex justify-between items-center p-3 border rounded-md'>
+    <div className={`flex justify-between items-center p-3 border rounded-md ${isPlaying ? `bg-blue-100` : `bg-white`}`}>
       
       <div className="flex gap-4 h-full">
         {/* Display the album artwork */}
@@ -50,8 +53,11 @@ export const Track = ({ name, album, artist, image, id, preview, addTrack, remov
 
         {/* Play and pause buttons */}
         <div className="flex gap-2">
-          <button onClick={togglePlayPause}>
-            {isPlaying ? `⏸️` : `▶️`} {/* Show ▶️ is not playing, ⏸️ if playing */}
+          <button 
+            onClick={() => handlePlayPreview(id)}
+            disabled={!preview}
+          >
+            {preview ? (isPlaying ? `⏸️` : `▶️`) : `🚫`}
           </button>
         </div>
       </div>
@@ -60,9 +66,11 @@ export const Track = ({ name, album, artist, image, id, preview, addTrack, remov
       <audio
         ref={audioRef}
         src={preview}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
         type="audio/mpeg"
+        onError={() => {
+          console.error("Error loading audio");
+          handlePlayPreview(null);  // Reset playback state in case of an error
+        }}
       >
       </audio>
 
